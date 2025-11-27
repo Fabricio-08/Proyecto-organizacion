@@ -392,10 +392,9 @@ void mostrarMenu() {
     cout << "6.  Agregar contacto pendiente" << endl;
     cout << "7.  Mostrar contactos pendientes" << endl;
     cout << "8.  Procesar contactos pendientes" << endl;
-    cout << "9.  Mostrar arbol inorden" << endl;
-    cout << "10. Mostrar arbol preorden" << endl;
-    cout << "11. Listar por telefono" << endl;
-    cout << "12. Mostrar eliminados" << endl;
+    cout << "9.  Recorridos del arbol" << endl;
+    cout << "10. Listar por telefono" << endl;
+    cout << "11. Mostrar eliminados" << endl;
     cout << "0.  Salir" << endl;
     cout << string(50, '=') << endl;
     cout << "Seleccione una opcion: ";
@@ -459,18 +458,33 @@ int main() {
         case 8:
             gestor.procesarContactosPendientes();
             break;
-        case 9:
-            gestor.mostrarArbolInorden();
+        case 9: {
+            int subopcion;
+            cout << "\n=== RECORRIDOS DEL ARBOL ===\n";
+            cout << "1. Mostrar recorrido Inorden\n";
+            cout << "2. Mostrar recorrido Preorden\n";
+            cout << "Seleccione una opcion: ";
+            cin >> subopcion;
+            cin.ignore();
+
+            if (subopcion == 1) {
+                gestor.mostrarArbolInorden();
+            }
+            else if (subopcion == 2) {
+                gestor.mostrarArbolPreorden();
+            }
+            else {
+                cout << "Opcion invalida.\n";
+            }
             break;
+        }
         case 10:
-            gestor.mostrarArbolPreorden();
-            break;
-        case 11:
             gestor.listarPorTelefono();
             break;
-        case 12:
+        case 11:
             gestor.mostrarEliminados();
             break;
+
         case 0:
             cout << "¡Hasta luego! Gracias por usar el gestor.\n";
             break;
