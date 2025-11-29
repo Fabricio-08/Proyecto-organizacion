@@ -389,16 +389,15 @@ void mostrarMenu() {
     cout << "3.  Buscar contacto" << endl;
     cout << "4.  Eliminar contacto" << endl;
     cout << "5.  Mostrar historial de operaciones" << endl;
-    cout << "6.  Agregar contacto pendiente" << endl;
-    cout << "7.  Mostrar contactos pendientes" << endl;
-    cout << "8.  Procesar contactos pendientes" << endl;
-    cout << "9.  Recorridos del arbol" << endl;
-    cout << "10. Listar por telefono" << endl;
-    cout << "11. Mostrar eliminados" << endl;
+    cout << "6.  Contactos pendientes" << endl;   
+    cout << "7.  Recorridos del arbol" << endl;
+    cout << "8.  Listar por telefono" << endl;
+    cout << "9.  Mostrar eliminados" << endl;
     cout << "0.  Salir" << endl;
     cout << string(50, '=') << endl;
-    cout << "Seleccione una opcion: ";
+    cout << "Seleccione una opcion: ";
 }
+
 
 int main() {
     GestorContactos gestor;
