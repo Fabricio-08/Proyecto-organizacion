@@ -381,9 +381,7 @@ private:
 
 
 void mostrarMenu() {
-    cout << "\n" << string(50, '=') << endl;
     cout << "GESTOR DE AGENDA DE CONTACTOS" << endl;
-    cout << string(50, '=') << endl;
     cout << "1.  Agregar contacto" << endl;
     cout << "2.  Listar contactos (por nombre)" << endl;
     cout << "3.  Buscar contacto" << endl;
@@ -394,8 +392,7 @@ void mostrarMenu() {
     cout << "8.  Listar por telefono" << endl;
     cout << "9.  Mostrar eliminados" << endl;
     cout << "0.  Salir" << endl;
-    cout << string(50, '=') << endl;
-    cout << "Seleccione una opcion: ";
+    cout << "Seleccione una opcion ";
 }
 
 
@@ -409,92 +406,127 @@ int main() {
         cin.ignore();
 
         switch (opcion) {
-        case 1: {
-            string nombre, telefono, email;
-            cout << "Nombre: ";
-            getline(cin, nombre);
-            cout << "Telefono: ";
-            getline(cin, telefono);
-            cout << "Email: ";
-            getline(cin, email);
-            gestor.agregarContacto(nombre, telefono, email);
-            break;
-        }
-        case 2:
-            gestor.listarContactos();
-            break;
-        case 3: {
-            string criterio;
-            cout << "Ingrese nombre o telefono a buscar: ";
-            getline(cin, criterio);
-            gestor.buscarContacto(criterio);
-            break;
-        }
-        case 4: {
-            int indice;
-            cout << "Ingrese el numero del contacto a eliminar: ";
-            cin >> indice;
-            gestor.eliminarContacto(indice - 1);
-            break;
-        }
-        case 5:
-            gestor.mostrarHistorial();
-            break;
-        case 6: {
-            string nombre, telefono, email;
-            cout << "Nombre del contacto pendiente: ";
-            getline(cin, nombre);
-            cout << "Telefono: ";
-            getline(cin, telefono);
-            cout << "Email: ";
-            getline(cin, email);
-            gestor.encolarContactoPendiente(nombre, telefono, email);
-            break;
-        }
-        case 7:
-            gestor.mostrarContactosPendientes();
-            break;
-        case 8:
-            gestor.procesarContactosPendientes();
-            break;
-        case 9: {
-            int subopcion;
-            cout << "\n=== RECORRIDOS DEL ARBOL ===\n";
-            cout << "1. Mostrar recorrido Inorden\n";
-            cout << "2. Mostrar recorrido Preorden\n";
-            cout << "Seleccione una opcion: ";
-            cin >> subopcion;
-            cin.ignore();
+            
 
-            if (subopcion == 1) {
-                gestor.mostrarArbolInorden();
+            case 1: {
+                string nombre, telefono, email;
+                cout << "Nombre: ";
+                getline(cin, nombre);
+                cout << "Telefono: ";
+                getline(cin, telefono);
+                cout << "Email: ";
+                getline(cin, email);
+                gestor.agregarContacto(nombre, telefono, email);
+                break;
             }
-            else if (subopcion == 2) {
-                gestor.mostrarArbolPreorden();
-            }
-            else {
-                cout << "Opcion invalida.\n";
-            }
-            break;
-        }
-        case 10:
-            gestor.listarPorTelefono();
-            break;
-        case 11:
-            gestor.mostrarEliminados();
-            break;
 
-        case 0:
-            cout << "¡Hasta luego! Gracias por usar el gestor.\n";
-            break;
-        default:
-            cout << "Opcion invalida. Intente nuevamente.\n";
-        }
+            case 2:
+                gestor.listarContactos();
+                break;
 
-        if (opcion != 0) {
-            cout << "\nPresione Enter para continuar...";
-            cin.get();
-        }
+            case 3: {
+                string criterio;
+                cout << "Ingrese nombre o telefono a buscar: ";
+                getline(cin, criterio);
+                gestor.buscarContacto(criterio);
+                break;
+            }
+
+            case 4: {
+                int indice;
+                cout << "Ingrese el numero del contacto a eliminar: ";
+                cin >> indice;
+                gestor.eliminarContacto(indice - 1);
+                break;
+            }
+
+            case 5:
+                gestor.mostrarHistorial();
+                break;
+
+                
+            case 6: {
+                int sub;
+                do {
+                    cout << "\n=== MENU DE CONTACTOS PENDIENTES ===\n";
+                    cout << "1. Agregar contacto pendiente\n";
+                    cout << "2. Mostrar contactos pendientes\n";
+                    cout << "3. Procesar contactos pendientes\n";
+                    cout << "0. Volver\n";
+                    cout << "Seleccione una opcion: ";
+                    cin >> sub;
+                    cin.ignore();
+
+                    switch (sub) {
+                    case 1: {
+                        string nombre, telefono, email;
+                        cout << "Nombre del contacto pendiente: ";
+                        getline(cin, nombre);
+                        cout << "Telefono: ";
+                        getline(cin, telefono);
+                        cout << "Email: ";
+                        getline(cin, email);
+                        gestor.encolarContactoPendiente(nombre, telefono, email);
+                        break;
+                    }
+                    case 2:
+                        gestor.mostrarContactosPendientes();
+                        break;
+
+                    case 3:
+                        gestor.procesarContactosPendientes();
+                        break;
+
+                    case 0:
+                        break;
+
+                    default:
+                        cout << "Opcion invalida.\n";
+                    }
+
+                    if (sub != 0) {
+                        cout << "\nPresione Enter para continuar...";
+                        cin.get();
+                    }
+                } while (sub != 0);
+
+                break;
+            }
+
+            case 7: {
+                int subopcion;
+                cout << "\n=== RECORRIDOS DEL ARBOL ===\n";
+                cout << "1. Mostrar recorrido Inorden\n";
+                cout << "2. Mostrar recorrido Preorden\n";
+                cout << "Seleccione una opcion: ";
+                cin >> subopcion;
+                cin.ignore();
+
+                if (subopcion == 1)
+                    gestor.mostrarArbolInorden();
+                else if (subopcion == 2)
+                    gestor.mostrarArbolPreorden();
+                else
+                    cout << "Opcion invalida.\n";
+                break;
+            }
+
+            case 8:
+                gestor.listarPorTelefono();
+                break;
+
+            case 9:
+                gestor.mostrarEliminados();
+                break;
+
+            case 0:
+                cout << "Hasta luego Gracias por usar el gestor.\n";
+                break;
+
+            default:
+                cout << "Opcion invalida. Intente nuevamente.\n";
+            }
+
 
     } while (opcion != 0);
 
