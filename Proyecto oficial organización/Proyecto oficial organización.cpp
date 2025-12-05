@@ -300,101 +300,113 @@ public:
     }
 
 private:
-
+    // Ordena los contactos por nombre usando el método de burbuja
     void ordenarPorNombre() {
+        // Recorre todos los contactos
         for (size_t i = 0; i < contactos.size() - 1; i++) {
+            // Compara cada contacto con el siguiente
             for (size_t j = 0; j < contactos.size() - i - 1; j++) {
+                // Si el nombre actual es mayor que el siguiente
                 if (contactos[j].nombre > contactos[j + 1].nombre) {
+                    // Los intercambia de lugar
                     swap(contactos[j], contactos[j + 1]);
                 }
             }
         }
     }
 
-
+    // Ordena los contactos por teléfono
     void ordenarPorTelefono() {
         for (size_t i = 0; i < contactos.size() - 1; i++) {
+            // Empieza suponiendo que el primero es el más pequeño
             size_t min_idx = i;
+            // Busca uno más pequeño en los que quedan
             for (size_t j = i + 1; j < contactos.size(); j++) {
                 if (contactos[j].telefono < contactos[min_idx].telefono) {
-                    min_idx = j;
+                    min_idx = j;// Encontró uno más pequeño
                 }
             }
+            // Si encontró uno más pequeño, lo cambia de lugar
             if (min_idx != i) {
                 swap(contactos[i], contactos[min_idx]);
             }
         }
     }
 
-
+    // Busca un contacto por nombre (rápido pero necesita estar ordenado)
     int busquedaBinaria(string nombre) {
         int izquierda = 0;
         int derecha = contactos.size() - 1;
-
+        // Mientras haya donde buscar
         while (izquierda <= derecha) {
+            // Calcula la posición del medio
             int medio = izquierda + (derecha - izquierda) / 2;
-
+            // ¡Encontró el contacto!
             if (contactos[medio].nombre == nombre) {
-                return medio;
+                return medio;// Devuelve su posición
             }
-
+            // Si el nombre buscado está después del medio
             if (contactos[medio].nombre < nombre) {
-                izquierda = medio + 1;
+                izquierda = medio + 1;// Busca en la mitad derecha
             }
             else {
-                derecha = medio - 1;
+                derecha = medio - 1;// Busca en la mitad izquierda
             }
         }
 
         return -1;
     }
 
-
+    // Agrega un contacto al árbol
     NodoArbol* insertarEnArbol(NodoArbol* nodo, Contacto contacto) {
+        // Si llegó a un lugar vacío, crea un nuevo nodo
         if (nodo == nullptr) {
             return new NodoArbol(contacto);
         }
-
+        // Si el nombre es menor, va a la izquierda
         if (contacto.nombre < nodo->contacto.nombre) {
             nodo->izquierdo = insertarEnArbol(nodo->izquierdo, contacto);
         }
         else {
+            // Si es mayor o igual, va a la derecha
             nodo->derecho = insertarEnArbol(nodo->derecho, contacto);
         }
 
         return nodo;
     }
-
+    // Muestra el árbol en orden alfabético
     void inorden(NodoArbol* nodo) {
         if (nodo != nullptr) {
-            inorden(nodo->izquierdo);
+            inorden(nodo->izquierdo);// Primero los de la izquierda
+            // Luego muestra este contacto
             cout << "Nombre: " << nodo->contacto.nombre << " | Telefono: "
                 << nodo->contacto.telefono << " | Email: "
                 << nodo->contacto.email << endl;
-            inorden(nodo->derecho);
+            inorden(nodo->derecho);// Finalmente los de la derecha
         }
     }
-
+    // Muestra el árbol de arriba hacia abajo
     void preorden(NodoArbol* nodo) {
         if (nodo != nullptr) {
+            // Primero muestra este contacto
             cout << "Nombre: " << nodo->contacto.nombre << " | Telefono: "
                 << nodo->contacto.telefono << " | Email: "
                 << nodo->contacto.email << endl;
-            preorden(nodo->izquierdo);
-            preorden(nodo->derecho);
+			preorden(nodo->izquierdo);//Luego los de la izquierda
+			preorden(nodo->derecho);// Finalmente los de la derecha
         }
     }
-
+    // Borra todo el árbol para liberar memoria
     void liberarArbol(NodoArbol* nodo) {
         if (nodo != nullptr) {
-            liberarArbol(nodo->izquierdo);
-            liberarArbol(nodo->derecho);
-            delete nodo;
+			liberarArbol(nodo->izquierdo);// Borra izquierda
+			liberarArbol(nodo->derecho);//Luego derecha
+			delete nodo;// Finalmente este nodo
         }
     }
 };
 
-
+// Muestra el menú principal con las opciones disponibles
 void mostrarMenu() {
     cout << "GESTOR DE AGENDA DE CONTACTOS" << endl;
     cout << "1.  Agregar contacto" << endl;
@@ -412,18 +424,19 @@ void mostrarMenu() {
 
 
 int main() {
-    GestorContactos gestor;
-    int opcion;
+	GestorContactos gestor;// Crea el gestor de contactos
+    int opcion;//Para guardar la opcion del usuario 
 
     do {
-        mostrarMenu();
-        cin >> opcion;
-        cin.ignore();
+		mostrarMenu();// Muestra el menú
+		cin >> opcion;//Lee la opción
+		cin.ignore();// Limpia el buffer de entrada
 
         switch (opcion) {
 
 
         case 1: {
+			// Agregar nuevo contacto
             string nombre, telefono, email;
             cout << "Nombre: ";
             getline(cin, nombre);
@@ -436,10 +449,12 @@ int main() {
         }
 
         case 2:
+			//Mostrar todos los contactos ordenados
             gestor.listarContactos();
             break;
 
         case 3: {
+			//Buscar contacto por nombre o telefono
             string criterio;
             cout << "Ingrese nombre o telefono a buscar: ";
             getline(cin, criterio);
@@ -448,6 +463,7 @@ int main() {
         }
 
         case 4: {
+			//Eliminar contacto 
             int indice;
             cout << "Ingrese el numero del contacto a eliminar: ";
             cin >> indice;
@@ -456,11 +472,13 @@ int main() {
         }
 
         case 5:
+			//Ver historial de lo que se ah hecho 
             gestor.mostrarHistorial();
             break;
 
 
         case 6: {
+			// Submenú para contactos pendientes
             int sub;
             do {
                 cout << "\n=== MENU DE CONTACTOS PENDIENTES ===\n";
@@ -473,6 +491,7 @@ int main() {
                 cin.ignore();
 
                 switch (sub) {
+					// Agregar contacto pendiente
                 case 1: {
                     string nombre, telefono, email;
                     cout << "Nombre del contacto pendiente: ";
@@ -485,20 +504,22 @@ int main() {
                     break;
                 }
                 case 2:
+					// Mostrar contactos pendientes
                     gestor.mostrarContactosPendientes();
                     break;
 
                 case 3:
+					// Procesar contactos pendientes a contactos normales
                     gestor.procesarContactosPendientes();
                     break;
 
-                case 0:
+				case 0:// Volver al menú principal
                     break;
 
                 default:
                     cout << "Opcion invalida.\n";
                 }
-
+                // Pausa para que el usuario vea el resultado
                 if (sub != 0) {
                     cout << "\nPresione Enter para continuar...";
                     cin.get();
@@ -508,7 +529,7 @@ int main() {
             break;
         }
 
-        case 7: {
+		case 7: {//Ver recorridos del árbol en orden y preorden
             int subopcion;
             cout << "\n=== RECORRIDOS DEL ARBOL ===\n";
             cout << "1. Mostrar recorrido Inorden\n";
@@ -518,23 +539,23 @@ int main() {
             cin.ignore();
 
             if (subopcion == 1)
-                gestor.mostrarArbolInorden();
+				gestor.mostrarArbolInorden();//Orden alfabético
             else if (subopcion == 2)
-                gestor.mostrarArbolPreorden();
+				gestor.mostrarArbolPreorden();//Como esta organizado
             else
                 cout << "Opcion invalida.\n";
             break;
         }
 
-        case 8:
+		case 8://Mostrar contactos ordenados por teléfono
             gestor.listarPorTelefono();
             break;
 
-        case 9:
+		case 9://Mostrar contactos eliminados
             gestor.mostrarEliminados();
             break;
 
-        case 0:
+		case 0:// Salir del programa
             cout << "Hasta luego Gracias por usar el gestor.\n";
             break;
 
@@ -543,7 +564,7 @@ int main() {
         }
 
 
-    } while (opcion != 0);
+	} while (opcion != 0);// Repite hasta que el usuario decida salir
 
     return 0;
 }
