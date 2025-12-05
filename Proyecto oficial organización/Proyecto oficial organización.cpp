@@ -9,7 +9,7 @@
 using namespace std;
 
 
-struct Contacto {
+struct Contacto {  // Estructura principal de los contactos
     string nombre;
     string telefono;
     string email;
@@ -18,7 +18,7 @@ struct Contacto {
 };
 
 
-struct NodoLista {
+struct NodoLista {  //Lista para guardar contactos eliminados
     Contacto contacto;
     NodoLista* siguiente;
 
@@ -26,62 +26,71 @@ struct NodoLista {
 };
 
 
-struct NodoArbol {
+struct NodoArbol { // Nodo para el arbol de contactos
     Contacto contacto;
     NodoArbol* izquierdo;
     NodoArbol* derecho;
 
     NodoArbol(Contacto c) : contacto(c), izquierdo(nullptr), derecho(nullptr) {}
 };
-
-class GestorContactos {
+//  Clase para gestionar contactos, maneja todas las estructuras de datos
+//  Vector principal
+//  Lista enlazada de eliminados
+//  Pila para historial
+//  Cola de pendientes
+//  Árboles
+class GestorContactos { 
 private:
 
-    vector<Contacto> contactos;
+    vector<Contacto> contactos; // Lista principal de contactos
 
 
-    NodoLista* listaEliminados;
+    NodoLista* listaEliminados;  // Lista enlazada de eliminados
 
 
-    stack<string> historial;
+    stack<string> historial; // Pila de operaciones realizadas
 
 
-    queue<Contacto> contactosPendientes;
+    queue<Contacto> contactosPendientes; // Cola de contactos pendientes
 
 
-    NodoArbol* arbolContactos;
+    NodoArbol* arbolContactos; // Árbol para ordenar contactos
 
 public:
     GestorContactos() : listaEliminados(nullptr), arbolContactos(nullptr) {}
 
     ~GestorContactos() {
-
+        // Libera memoria de la lista enlazada
         while (listaEliminados != nullptr) {
             NodoLista* temp = listaEliminados;
             listaEliminados = listaEliminados->siguiente;
             delete temp;
         }
 
-
+        // Libera memoria del árbol
         liberarArbol(arbolContactos);
     }
 
-
+    // Agregar contacto
+    // Guarda en el vector
+    // Agrega al árbol 
+    // Guarda la operación en el historial
     void agregarContacto(string nombre, string telefono, string email) {
         Contacto nuevoContacto(nombre, telefono, email);
         contactos.push_back(nuevoContacto);
 
-
+        // Registro en historial
         string operacion = "AGREGADO: " + nombre + " - " + telefono;
         historial.push(operacion);
 
-
+        // Guarda en el arbol
         arbolContactos = insertarEnArbol(arbolContactos, nuevoContacto);
 
         cout << "Contacto agregado exitosamente!\n";
     }
 
-
+    // Listar contactos
+   // Ordena el vector por nombre antes de enseñarlo
     void listarContactos() {
         if (contactos.empty()) {
             cout << "No hay contactos registrados.\n";
@@ -100,7 +109,7 @@ public:
         cout << "Total: " << contactos.size() << " contactos\n";
     }
 
-
+	// Busca contacto de forma secuencial y binaria
     void buscarContacto(string criterio) {
         cout << "\n=== RESULTADOS DE BUSQUEDA ===\n";
 
@@ -135,7 +144,11 @@ public:
         }
     }
 
-
+	// Eliminar contacto
+    // Mueve a la lista enlazada de eliminados
+    // Borra del vector
+    // Actualiza el árbol 
+    // Agrega al historial
     void eliminarContacto(int indice) {
         if (indice < 0 || indice >= (int)contactos.size()) {
             cout << "Indice invalido.\n";
@@ -144,28 +157,29 @@ public:
 
 
         Contacto eliminado = contactos[indice];
+        // Insertar al inicio de la lista enlazada
         NodoLista* nuevoNodo = new NodoLista(eliminado);
         nuevoNodo->siguiente = listaEliminados;
         listaEliminados = nuevoNodo;
 
-
+        // Quitar del vector
         contactos.erase(contactos.begin() + indice);
 
-
+        // Actualizar árbol
         liberarArbol(arbolContactos);
         arbolContactos = nullptr;
         for (const auto& contacto : contactos) {
             arbolContactos = insertarEnArbol(arbolContactos, contacto);
         }
 
-
+        // Guarda los cambios
         string operacion = "ELIMINADO: " + eliminado.nombre + " - " + eliminado.telefono;
         historial.push(operacion);
 
         cout << "Contacto eliminado exitosamente!\n";
     }
 
-
+	// Muestra la lista de eliminados
     void mostrarEliminados() {
         if (listaEliminados == nullptr) {
             cout << "No hay contactos eliminados.\n";
@@ -184,7 +198,7 @@ public:
         }
     }
 
-
+    // Muestra el historial en formato PILA, las ultimos procesos se muestran de primero
     void mostrarHistorial() {
         if (historial.empty()) {
             cout << "No hay operaciones en el historial.\n";
@@ -192,7 +206,7 @@ public:
         }
 
         cout << "\n=== HISTORIAL DE OPERACIONES (Ultimas primero) ===\n";
-        stack<string> temp = historial;
+        stack<string> temp = historial; // Copia temporal para no alterar la original
         int contador = 1;
 
         while (!temp.empty()) {
@@ -202,7 +216,8 @@ public:
         }
     }
 
-
+	// Cola de contactos pendientes
+    // Guarda contactos para guardar después 
     void encolarContactoPendiente(string nombre, string telefono, string email) {
         Contacto pendiente(nombre, telefono, email);
         contactosPendientes.push(pendiente);
@@ -248,7 +263,7 @@ public:
         cout << "Se procesaron " << procesados << " contactos pendientes.\n";
     }
 
-
+	//Recorridos del árbol
     void mostrarArbolInorden() {
         cout << "\n=== CONTACTOS EN ARBOL (Recorrido Inorden) ===\n";
         if (arbolContactos == nullptr) {
